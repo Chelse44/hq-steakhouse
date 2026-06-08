@@ -1,0 +1,620 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Barlow:wght@300;400;500;600&display=swap');
+  
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  .hq-site {
+    font-family: 'Barlow', sans-serif;
+    background: #0f0d0b;
+    color: #e8ddd0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .hq-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2.5rem;
+    height: 68px;
+    background: rgba(15,13,11,0.92);
+    border-bottom: 1px solid rgba(200,165,100,0.18);
+    backdrop-filter: blur(8px);
+  }
+
+  .hq-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #c8a564;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+  }
+  .hq-logo span { font-style: italic; font-weight: 400; color: #e8ddd0; font-size: 14px; display: block; letter-spacing: 0.12em; }
+
+  .hq-nav-links { display: flex; gap: 0; }
+  .hq-nav-links a {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #b0a090;
+    text-decoration: none;
+    padding: 0 1.2rem;
+    height: 68px;
+    display: flex;
+    align-items: center;
+    border-bottom: 2px solid transparent;
+    transition: color 0.2s, border-color 0.2s;
+    cursor: pointer;
+  }
+  .hq-nav-links a:hover, .hq-nav-links a.active { color: #c8a564; border-bottom-color: #c8a564; }
+
+  .hq-nav-cta {
+    background: #c8a564;
+    color: #0f0d0b;
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .hq-nav-cta:hover { background: #d9b97a; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .hero {
+    position: relative;
+    height: 540px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, #1a120a 0%, #0f0d0b 60%, #1a1208 100%);
+  }
+  .hero-pattern {
+    position: absolute; inset: 0;
+    opacity: 0.06;
+    background-image: repeating-linear-gradient(45deg, #c8a564 0px, #c8a564 1px, transparent 1px, transparent 40px),
+                      repeating-linear-gradient(-45deg, #c8a564 0px, #c8a564 1px, transparent 1px, transparent 40px);
+  }
+  .hero-img {
+    position: absolute; inset: 0;
+    background: url('https://static.wixstatic.com/media/6ca59d_0a896a77a70c4e5fbbd70170897ec275~mv2.jpg') center/cover;
+    opacity: 0.22;
+  }
+  .hero-content {
+    position: relative;
+    padding: 0 2.5rem 3rem;
+    max-width: 680px;
+  }
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c8a564;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-tag::before { content: ''; display: block; width: 32px; height: 1px; background: #c8a564; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #f0e8d8;
+    margin-bottom: 1rem;
+  }
+  .hero h1 em { font-style: italic; color: #c8a564; }
+  .hero-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: #9a8e80;
+    line-height: 1.7;
+    margin-bottom: 1.8rem;
+    max-width: 480px;
+  }
+  .hero-actions { display: flex; gap: 12px; align-items: center; }
+  .btn-primary {
+    background: #c8a564;
+    color: #0f0d0b;
+    border: none;
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 13px 28px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: #d9b97a; }
+  .btn-ghost {
+    background: transparent;
+    color: #c8a564;
+    border: 1px solid rgba(200,165,100,0.4);
+    font-family: 'Barlow', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 13px 28px;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: #c8a564; color: #d9b97a; }
+
+  .info-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid rgba(200,165,100,0.15);
+    border-bottom: 1px solid rgba(200,165,100,0.15);
+  }
+  .info-strip-item {
+    padding: 1.2rem 2.5rem;
+    border-right: 1px solid rgba(200,165,100,0.15);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .info-strip-item:last-child { border-right: none; }
+  .info-strip-item i { font-size: 20px; color: #c8a564; flex-shrink: 0; }
+  .info-strip-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a5e52; margin-bottom: 2px; }
+  .info-strip-value { font-size: 13px; font-weight: 500; color: #c0b0a0; }
+
+  .section { padding: 3rem 2.5rem; }
+  .section-tag {
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: #c8a564;
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-tag::before { content: ''; display: block; width: 20px; height: 1px; background: #c8a564; }
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #f0e8d8;
+    margin-bottom: 0.4rem;
+    line-height: 1.2;
+  }
+  .section-lead { font-size: 14px; color: #7a6e62; font-weight: 300; margin-bottom: 2rem; max-width: 520px; line-height: 1.6; }
+
+  .highlights-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(200,165,100,0.12); margin-top: 2rem; }
+  .highlight-card {
+    background: #141210;
+    padding: 2rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .highlight-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: #c8a564;
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .highlight-card:hover { background: #1a1612; }
+  .highlight-card:hover::after { transform: scaleX(1); }
+  .highlight-card i { font-size: 26px; color: #c8a564; margin-bottom: 1rem; display: block; }
+  .highlight-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    color: #e8ddd0;
+    margin-bottom: 0.5rem;
+  }
+  .highlight-card p { font-size: 13px; color: #7a6e62; line-height: 1.6; font-weight: 300; }
+
+  .divider { height: 1px; background: rgba(200,165,100,0.12); margin: 0 2.5rem; }
+
+  .menu-cats { display: flex; gap: 0; border-bottom: 1px solid rgba(200,165,100,0.15); padding: 0 2.5rem; margin-top: 1.5rem; }
+  .menu-cat {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #6a5e52;
+    padding: 0.8rem 1.4rem;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .menu-cat:hover, .menu-cat.active { color: #c8a564; border-bottom-color: #c8a564; }
+
+  .menu-items { padding: 2rem 2.5rem; }
+  .menu-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    color: #c8a564;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid rgba(200,165,100,0.15);
+  }
+  .menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; margin-bottom: 2rem; }
+  .menu-item {
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(200,165,100,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+  }
+  .menu-item-name { font-size: 14px; color: #c0b0a0; font-weight: 400; }
+  .menu-item-desc { font-size: 12px; color: #5a5048; margin-top: 2px; font-weight: 300; }
+  .menu-item-price { font-size: 14px; color: #c8a564; font-weight: 500; white-space: nowrap; flex-shrink: 0; }
+
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(200,165,100,0.12); margin-top: 2rem; }
+  .contact-block { background: #141210; padding: 2rem; }
+  .contact-block-label { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #6a5e52; margin-bottom: 1rem; }
+  .contact-block-value { font-size: 16px; font-weight: 300; color: #c0b0a0; line-height: 1.7; }
+  .contact-block-value strong { font-weight: 500; color: #e8ddd0; }
+  .contact-block a { color: #c8a564; text-decoration: none; }
+  .contact-block a:hover { text-decoration: underline; }
+
+  .hours-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid rgba(200,165,100,0.08); font-size: 13px; }
+  .hours-row:last-child { border-bottom: none; }
+  .hours-day { color: #7a6e62; font-weight: 300; }
+  .hours-time { color: #c0b0a0; font-weight: 400; }
+
+  .social-hour-strip {
+    margin: 2rem 2.5rem;
+    padding: 2rem;
+    background: #1a1208;
+    border: 1px solid rgba(200,165,100,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+  }
+  .social-hour-strip h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: #f0e8d8;
+    margin-bottom: 4px;
+  }
+  .social-hour-strip p { font-size: 13px; color: #7a6e62; font-weight: 300; }
+  .social-hour-badge {
+    background: rgba(200,165,100,0.12);
+    border: 1px solid rgba(200,165,100,0.3);
+    padding: 6px 14px;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #c8a564;
+    white-space: nowrap;
+  }
+
+  .about-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; padding: 2rem 2.5rem; }
+  .about-text p { font-size: 14px; color: #9a8e80; line-height: 1.8; font-weight: 300; margin-bottom: 1.2rem; }
+  .about-text p:first-child { font-size: 16px; color: #c0b0a0; font-weight: 400; }
+  .about-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(200,165,100,0.12); }
+  .about-stat { background: #141210; padding: 1.5rem; text-align: center; }
+  .about-stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    color: #c8a564;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .about-stat-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: #6a5e52; }
+
+  .footer {
+    border-top: 1px solid rgba(200,165,100,0.12);
+    padding: 1.5rem 2.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy { font-size: 12px; color: #4a4038; }
+  .footer-brand { font-family: 'Playfair Display', serif; font-size: 16px; color: #c8a564; }
+
+  .menu-panel { display: none; }
+  .menu-panel.active { display: block; }
+
+  .social-page-content { padding: 2rem 2.5rem; }
+  .social-feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: rgba(200,165,100,0.12); margin-bottom: 2rem; }
+  .social-feature { background: #141210; padding: 1.5rem; text-align: center; }
+  .social-feature i { font-size: 28px; color: #c8a564; margin-bottom: 0.8rem; display: block; }
+  .social-feature h4 { font-family: 'Playfair Display', serif; font-size: 16px; color: #e8ddd0; margin-bottom: 0.4rem; }
+  .social-feature p { font-size: 12px; color: #6a5e52; font-weight: 300; line-height: 1.5; }
+
+  .time-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(200,165,100,0.1);
+    border: 1px solid rgba(200,165,100,0.25);
+    padding: 6px 14px;
+    font-size: 12px;
+    color: #c8a564;
+    letter-spacing: 0.06em;
+    margin-bottom: 1.2rem;
+  }
+</style>
+
+<div class="hq-site">
+  <h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);">HQ Steakhouse website redesign concept — navigate using the top menu</h2>
+
+  <nav class="hq-nav">
+    <div class="hq-logo" onclick="showPage('home')">HQ<span>Headquarters Steakhouse & Bar</span></div>
+    <div class="hq-nav-links">
+      <a onclick="showPage('home')" id="nav-home" class="active">Home</a>
+      <a onclick="showPage('menu')" id="nav-menu">Menu</a>
+      <a onclick="showPage('social')" id="nav-social">Social Hour</a>
+      <a onclick="showPage('about')" id="nav-about">About</a>
+      <a onclick="showPage('contact')" id="nav-contact">Contact</a>
+    </div>
+    <button class="hq-nav-cta" onclick="sendPrompt('I want to make a reservation at HQ Steakhouse')">Reserve a table</button>
+  </nav>
+
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <div class="hero-bg"></div>
+      <div class="hero-pattern"></div>
+      <div class="hero-img"></div>
+      <div class="hero-content">
+        <div class="hero-tag">Cape Town's original steakhouse</div>
+        <h1>Born in 2008.<br><em>Reimagined</em> for today.</h1>
+        <p class="hero-sub">Great steaks, quality drinks, and the kind of atmosphere that brings people together. Century City, Cape Town.</p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showPage('menu')">Explore the menu</button>
+          <button class="btn-ghost" onclick="showPage('contact')">Find us</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-strip">
+      <div class="info-strip-item">
+        <i class="ti ti-map-pin" aria-hidden="true"></i>
+        <div>
+          <div class="info-strip-label">Location</div>
+          <div class="info-strip-value">Century City, Cape Town</div>
+        </div>
+      </div>
+      <div class="info-strip-item">
+        <i class="ti ti-clock" aria-hidden="true"></i>
+        <div>
+          <div class="info-strip-label">Kitchen hours</div>
+          <div class="info-strip-value">Mon–Sat · 12pm – 10pm</div>
+        </div>
+      </div>
+      <div class="info-strip-item">
+        <i class="ti ti-phone" aria-hidden="true"></i>
+        <div>
+          <div class="info-strip-label">Call us</div>
+          <div class="info-strip-value">021 555 0158</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-tag">Why HQ</div>
+      <h2>More than a steakhouse</h2>
+      <p class="section-lead">From dry-aged cuts to craft cocktails, every detail is considered. This is where Century City comes to gather.</p>
+      <div class="highlights-grid">
+        <div class="highlight-card">
+          <i class="ti ti-flame" aria-hidden="true"></i>
+          <h3>The Steaks</h3>
+          <p>Premium cuts, expertly cooked. From flame-grilled sirloins to slow-finished ribeyes — the centrepiece of everything we do.</p>
+        </div>
+        <div class="highlight-card">
+          <i class="ti ti-glass" aria-hidden="true"></i>
+          <h3>The Bar</h3>
+          <p>Open until 11pm. Craft cocktails, local wines, and a curated spirits list that holds its own against any Cape Town bar.</p>
+        </div>
+        <div class="highlight-card">
+          <i class="ti ti-users" aria-hidden="true"></i>
+          <h3>Social Dining</h3>
+          <p>Designed for groups. Shared platters, long tables, and a buzzing atmosphere made for lingering over food and drinks.</p>
+        </div>
+        <div class="highlight-card">
+          <i class="ti ti-star" aria-hidden="true"></i>
+          <h3>Social Hour</h3>
+          <p>Exclusive weekday specials on drinks and small plates. The smartest hour in Century City — check our Social Hour page.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="social-hour-strip">
+      <div>
+        <h3>Social Hour is on</h3>
+        <p>Weekday specials — drinks, small plates, big vibes. Come early, stay late.</p>
+      </div>
+      <div class="social-hour-badge">Mon–Fri · check times</div>
+      <button class="btn-ghost" onclick="showPage('social')">See what's on →</button>
+    </div>
+
+    <div class="footer">
+      <span class="footer-copy">© 2025 Headquarters Steakhouse & Bar · Century City, Cape Town</span>
+      <span class="footer-brand">HQ</span>
+    </div>
+  </div>
+
+  <div id="page-menu" class="page">
+    <div class="section" style="padding-bottom:0.5rem">
+      <div class="section-tag">The menu</div>
+      <h2>What we're cooking</h2>
+      <p class="section-lead">Steakhouse classics alongside modern social plates. Ask your server for the day's specials.</p>
+    </div>
+    <div class="menu-cats">
+      <div class="menu-cat active" onclick="showMenuCat(this,'grills')">Grills & Steaks</div>
+      <div class="menu-cat" onclick="showMenuCat(this,'starters')">Starters</div>
+      <div class="menu-cat" onclick="showMenuCat(this,'sides')">Sides</div>
+      <div class="menu-cat" onclick="showMenuCat(this,'drinks')">Drinks</div>
+    </div>
+    <div class="menu-items">
+      <div id="cat-grills" class="menu-panel active">
+        <div class="menu-section-title">Signature cuts</div>
+        <div class="menu-grid">
+          <div class="menu-item"><div><div class="menu-item-name">Sirloin 300g</div><div class="menu-item-desc">Flame-grilled, rested</div></div><div class="menu-item-price">R285</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Ribeye 400g</div><div class="menu-item-desc">Marbled, aged 21 days</div></div><div class="menu-item-price">R345</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Fillet 250g</div><div class="menu-item-desc">Centre-cut, butter basted</div></div><div class="menu-item-price">R320</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">T-Bone 500g</div><div class="menu-item-desc">The full experience</div></div><div class="menu-item-price">R395</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Rump 300g</div><div class="menu-item-desc">Classic, flavourful</div></div><div class="menu-item-price">R245</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Chicken Breast</div><div class="menu-item-desc">Peri-peri or lemon herb</div></div><div class="menu-item-price">R165</div></div>
+        </div>
+        <p style="font-size:12px;color:#4a4038;font-style:italic;">All steaks served with your choice of sauce and one side. Ask your server about the chef's cut of the day.</p>
+      </div>
+      <div id="cat-starters" class="menu-panel">
+        <div class="menu-section-title">To begin</div>
+        <div class="menu-grid">
+          <div class="menu-item"><div><div class="menu-item-name">Beef Carpaccio</div><div class="menu-item-desc">Capers, parmesan, truffle oil</div></div><div class="menu-item-price">R115</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Calamari</div><div class="menu-item-desc">Salt & pepper, aioli</div></div><div class="menu-item-price">R95</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Biltong Board</div><div class="menu-item-desc">House-cured, spiced nuts</div></div><div class="menu-item-price">R125</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Mushroom Bruschetta</div><div class="menu-item-desc">Wild mushroom, grilled sourdough</div></div><div class="menu-item-price">R85</div></div>
+        </div>
+      </div>
+      <div id="cat-sides" class="menu-panel">
+        <div class="menu-section-title">On the side</div>
+        <div class="menu-grid">
+          <div class="menu-item"><div><div class="menu-item-name">Hand-cut chips</div><div class="menu-item-desc">Sea salt</div></div><div class="menu-item-price">R55</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Creamed spinach</div><div class="menu-item-desc">Nutmeg, cream</div></div><div class="menu-item-price">R55</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Onion rings</div><div class="menu-item-desc">Beer batter</div></div><div class="menu-item-price">R55</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">House salad</div><div class="menu-item-desc">Seasonal leaves, vinaigrette</div></div><div class="menu-item-price">R55</div></div>
+        </div>
+      </div>
+      <div id="cat-drinks" class="menu-panel">
+        <div class="menu-section-title">Behind the bar</div>
+        <div class="menu-grid">
+          <div class="menu-item"><div><div class="menu-item-name">House cocktails</div><div class="menu-item-desc">Rotating seasonal list</div></div><div class="menu-item-price">R95–115</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Cape wines (glass)</div><div class="menu-item-desc">Red, white, rosé</div></div><div class="menu-item-price">R65–95</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Craft beer</div><div class="menu-item-desc">Local selection</div></div><div class="menu-item-price">R60–75</div></div>
+          <div class="menu-item"><div><div class="menu-item-name">Soft drinks & juices</div><div class="menu-item-desc">Still, sparkling, pressed</div></div><div class="menu-item-price">R35–55</div></div>
+        </div>
+        <p style="font-size:12px;color:#4a4038;font-style:italic;">Bar is open Mon–Sat 11am–11pm. Social Hour specials apply Monday to Friday.</p>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-copy">Menu items and pricing subject to change. All prices include VAT.</span><span class="footer-brand">HQ</span></div>
+  </div>
+
+  <div id="page-social" class="page">
+    <div class="section" style="padding-bottom:0">
+      <div class="section-tag">Social Hour</div>
+      <h2>The best value hour in Century City</h2>
+      <p class="section-lead">Knock-out drink specials and sharing plates, Monday through Friday. Get in early.</p>
+    </div>
+    <div class="social-page-content">
+      <div class="time-badge"><i class="ti ti-clock" aria-hidden="true"></i> Mon–Fri · confirm times with the venue</div>
+      <div class="social-feature-grid">
+        <div class="social-feature">
+          <i class="ti ti-glass" aria-hidden="true"></i>
+          <h4>Drink specials</h4>
+          <p>Selected cocktails, wines by the glass, and draught beers at Social Hour prices.</p>
+        </div>
+        <div class="social-feature">
+          <i class="ti ti-salad" aria-hidden="true"></i>
+          <h4>Small plates</h4>
+          <p>Sharing bites designed for the after-work crowd. Order a few, stay a while.</p>
+        </div>
+        <div class="social-feature">
+          <i class="ti ti-users" aria-hidden="true"></i>
+          <h4>Walk-ins welcome</h4>
+          <p>No booking needed. The bar's open, the stools are waiting.</p>
+        </div>
+      </div>
+      <div style="padding:1.5rem;background:#1a1208;border:1px solid rgba(200,165,100,0.18);margin-top:1.5rem;">
+        <p style="font-size:13px;color:#9a8e80;line-height:1.7;">Social Hour specials change seasonally. Call <strong style="color:#c0b0a0;">021 555 0158</strong> or email <a href="mailto:social@hqsteak.co.za" style="color:#c8a564;">social@hqsteak.co.za</a> for the current lineup before you come in.</p>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-copy">Subject to availability. Terms apply.</span><span class="footer-brand">HQ</span></div>
+  </div>
+
+  <div id="page-about" class="page">
+    <div class="section" style="padding-bottom:0.5rem">
+      <div class="section-tag">Our story</div>
+      <h2>The HQ story</h2>
+    </div>
+    <div class="about-layout">
+      <div class="about-text">
+        <p>What began as Cape Town's original single-concept steakhouse in 2008 has returned — refined, expanded, and more social than ever.</p>
+        <p>The spirit was always the same: no gimmicks, no shortcuts. Great cuts of meat, cooked with confidence. A bar worth lingering at. A room that feels alive.</p>
+        <p>Now in the heart of Century City's Colosseum Building, HQ is bigger and bolder than its first iteration — but the DNA is unchanged. This is a place built for real people who know what they want.</p>
+        <p>Timeless steakhouse culture. Modern social dining. Welcome back.</p>
+        <button class="btn-ghost" style="margin-top:1rem" onclick="showPage('contact')">Visit us ↗</button>
+      </div>
+      <div>
+        <div class="about-stat-grid">
+          <div class="about-stat"><div class="about-stat-num">2008</div><div class="about-stat-label">Founded</div></div>
+          <div class="about-stat"><div class="about-stat-num">CPT</div><div class="about-stat-label">Home city</div></div>
+          <div class="about-stat"><div class="about-stat-num">6</div><div class="about-stat-label">Days a week</div></div>
+          <div class="about-stat"><div class="about-stat-num">∞</div><div class="about-stat-label">Good times</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="footer"><span class="footer-copy">© 2025 Headquarters Steakhouse & Bar</span><span class="footer-brand">HQ</span></div>
+  </div>
+
+  <div id="page-contact" class="page">
+    <div class="section" style="padding-bottom:0.5rem">
+      <div class="section-tag">Get in touch</div>
+      <h2>Find us</h2>
+      <p class="section-lead">We're in the Colosseum Building at Century City. Walk-ins always welcome, reservations recommended for groups.</p>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-block">
+        <div class="contact-block-label"><i class="ti ti-map-pin" aria-hidden="true" style="font-size:14px;margin-right:6px;"></i>Address</div>
+        <div class="contact-block-value">
+          <strong>Century Way G11</strong><br>
+          Colosseum Building<br>
+          Century City<br>
+          Cape Town, 7441
+        </div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label"><i class="ti ti-clock" aria-hidden="true" style="font-size:14px;margin-right:6px;"></i>Opening hours</div>
+        <div class="hours-row"><span class="hours-day">Monday – Saturday</span><span></span></div>
+        <div class="hours-row"><span class="hours-day">Kitchen</span><span class="hours-time">12pm – 10pm</span></div>
+        <div class="hours-row"><span class="hours-day">Bar</span><span class="hours-time">11am – 11pm</span></div>
+        <div class="hours-row"><span class="hours-day">Sunday</span><span class="hours-time">Closed</span></div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label"><i class="ti ti-phone" aria-hidden="true" style="font-size:14px;margin-right:6px;"></i>Phone</div>
+        <div class="contact-block-value"><a href="tel:0215550158">021 555 0158</a></div>
+      </div>
+      <div class="contact-block">
+        <div class="contact-block-label"><i class="ti ti-mail" aria-hidden="true" style="font-size:14px;margin-right:6px;"></i>Email</div>
+        <div class="contact-block-value"><a href="mailto:social@hqsteak.co.za">social@hqsteak.co.za</a></div>
+      </div>
+    </div>
+    <div style="padding:2rem 2.5rem;">
+      <button class="btn-primary" onclick="sendPrompt('I want to make a group booking at HQ Steakhouse in Century City Cape Town')">Enquire about group bookings ↗</button>
+    </div>
+    <div class="footer"><span class="footer-copy">Century Way G11, Colosseum Building, Century City, Cape Town</span><span class="footer-brand">HQ</span></div>
+  </div>
+</div>
+
+<script>
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.hq-nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.getElementById('nav-' + id).classList.add('active');
+}
+function showMenuCat(el, catId) {
+  document.querySelectorAll('.menu-cat').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('cat-' + catId).classList.add('active');
+}
+</script>
